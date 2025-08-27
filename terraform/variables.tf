@@ -3,6 +3,10 @@ variable "region" {
   default = "eu-central-1"
 }
 
+#################################################
+################# VPC VARIABLES #################
+#################################################
+
 variable "vpc_ip_range" {
   type    = string
   default = "10.0.0.0/16"
@@ -36,4 +40,29 @@ variable "private_subnet_1_ip" {
 variable "private_subnet_2_ip" {
   type    = string
   default = "10.0.4.0/24"
+}
+
+
+#################################################
+############## INSTANCES VARIABLES ##############
+#################################################
+
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+
+variable "ami_id" {
+  type    = string
+  default = "ami-0a116fa7c861dd5f9"
+}
+
+variable "key_name" {
+  type    = string
+  default = "devops-key-pair"
+}
+
+variable "instance_count" {
+  type    = number
+  default = 1
 }
