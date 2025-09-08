@@ -1,0 +1,40 @@
+- name: Setup Flask app on EC2 instance
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Check if Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+        
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Pull Flask app image from Docker Hub
+      docker_image:
+        name: adrianwisniewskiit/devops-infra-aws
+        tag: latest
+        source: pull
+
+    - name: Run Flask app container
+      docker_container:
+        name: devops-app
+        image: adrianwisniewskiit/devops-infra-aws:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:5000"
