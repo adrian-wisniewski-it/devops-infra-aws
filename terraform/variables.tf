@@ -66,3 +66,42 @@ variable "instance_count" {
   type    = number
   default = 1
 }
+
+#################################################
+############### RDS VARIABLES ###################
+#################################################
+
+variable "db_instance_class" {
+  type    = string
+  default = "db.t3.micro"
+}
+
+variable "db_name" {
+  type    = string
+  default = "database"
+}
+
+variable "db_username" {
+  type    = string
+  default = "admin"
+}
+
+variable "db_password" {
+  type    = string
+  default = "password"
+}
+
+variable "db_allocated_storage" {
+  type    = number
+  default = 20
+}
+
+variable "db_engine" {
+  type    = string
+  default = "postgres"
+}
+
+variable "db_storage_type" {
+  type    = string
+  default = "gp3"
+}

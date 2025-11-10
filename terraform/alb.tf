@@ -1,8 +1,8 @@
 resource "aws_lb" "devops_alb" {
   name               = "devops-alb"
   load_balancer_type = "application"
-  security_groups = [aws_security_group.devops_alb_sg.id]
-  subnets = [ 
+  security_groups    = [aws_security_group.devops_alb_sg.id]
+  subnets = [
     aws_subnet.devops_public_1.id,
     aws_subnet.devops_public_2.id
   ]
@@ -22,7 +22,7 @@ resource "aws_lb_target_group" "devops_lb_tg" {
     path                = "/healthz"
     interval            = 30
     timeout             = 5
-    healthy_threshold  = 2
+    healthy_threshold   = 2
     unhealthy_threshold = 2
   }
 
@@ -46,5 +46,5 @@ resource "aws_lb_listener" "devops_lb_listener" {
 resource "aws_lb_target_group_attachment" "devops_tg_attachment" {
   target_group_arn = aws_lb_target_group.devops_lb_tg.arn
   target_id        = aws_instance.devops_instance[0].id
-  port            = 80
+  port             = 80
 }

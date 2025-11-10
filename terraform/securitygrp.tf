@@ -52,3 +52,20 @@ resource "aws_vpc_security_group_egress_rule" "alb_all" {
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }
+
+resource "aws_security_group" "devops_rds_sg" {
+  name   = "devops-rds-sg"
+  vpc_id = aws_vpc.devops_vpc.id
+
+  tags = {
+    Name = "devops-rds-sg"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "rds_postgres_from_ec2" {
+  security_group_id            = aws_security_group.devops_rds_sg.id
+  referenced_security_group_id = aws_security_group.devops_sg.id
+  from_port                    = 5432
+  ip_protocol                  = "tcp"
+  to_port                      = 5432
+}

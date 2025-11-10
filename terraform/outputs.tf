@@ -5,3 +5,11 @@ output "ec2_public_ips" {
 output "alb_dns_name" {
   value = aws_lb.devops_alb.dns_name
 }
+
+output "db_host" {
+  value = aws_db_instance.devops_rds.address
+}
+
+output "db_name" {
+  value = aws_db_instance.devops_rds.db_name
+}
