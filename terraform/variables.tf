@@ -86,11 +86,6 @@ variable "db_username" {
   default = "admin"
 }
 
-variable "db_password" {
-  type    = string
-  default = "password"
-}
-
 variable "db_allocated_storage" {
   type    = number
   default = 20

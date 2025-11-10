@@ -17,3 +17,11 @@ output "db_name" {
 output "tf_state_bucket_name" {
   value = aws_s3_bucket.tf_state_bucket.bucket
 }
+
+output "db_secret_arn" {
+  value = aws_secretsmanager_secret.db_credentials.arn
+}
+
+output "db_secret_name" {
+  value = aws_secretsmanager_secret.db_credentials.name
+}
