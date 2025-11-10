@@ -13,3 +13,7 @@ output "db_host" {
 output "db_name" {
   value = aws_db_instance.devops_rds.db_name
 }
+
+output "tf_state_bucket_name" {
+  value = aws_s3_bucket.tf_state_bucket.bucket
+}
