@@ -21,7 +21,6 @@ resource "aws_secretsmanager_secret" "db_credentials" {
   tags = {
     Name = "devops-rds-db-credentials"
   }
-
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_version" {
@@ -31,12 +30,11 @@ resource "aws_secretsmanager_secret_version" "db_credentials_version" {
     password = random_password.db_password.result
     db_name  = var.db_name
   })
-
 }
 
 resource "aws_db_instance" "devops_rds" {
   identifier             = "devops-rds-instance"
-  engine                 = "postgres"
+  engine                 = var.db_engine
   instance_class         = var.db_instance_class
   allocated_storage      = var.db_allocated_storage
   storage_type           = var.db_storage_type
@@ -46,6 +44,9 @@ resource "aws_db_instance" "devops_rds" {
   db_subnet_group_name   = aws_db_subnet_group.devops_rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.devops_rds_sg.id]
   skip_final_snapshot    = true
+  backup_retention_period = 7
+  backup_window          = "03:00-04:00"
+  maintenance_window     = "Mon:04:00-Mon:05:00"
 
   tags = {
     Name = "devops-rds-instance"
