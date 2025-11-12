@@ -2,22 +2,33 @@
   hosts: all
   become: yes
 
+  vars:
+    region: "eu-central-1"
+    secret_name: "devops-rds-db-credentials"
+
+  pre_tasks:
+    - name: Lookup database credentials from AWS Secrets Manager
+      set_fact:
+        db_secret: "{{ lookup('amazon.aws.aws_secret', secret_name, region=region) | from_json }}"
+
   tasks:
-    - name: Update apt
+    - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Install Docker
+    - name: Install Docker and PostgreSQL client
       apt:
-        name: docker.io
+        name:
+          - docker.io
+          - postgresql-client
         state: present
 
-    - name: Check if Docker service is running
+    - name: Ensure Docker service is running
       service:
         name: docker
         state: started
         enabled: yes
-        
+
     - name: Add ubuntu user to docker group
       user:
         name: ubuntu
@@ -30,7 +41,7 @@
         tag: latest
         source: pull
 
-    - name: Run Flask app container
+    - name: Run Flask app container using database credentials from Secrets Manager
       docker_container:
         name: devops-app
         image: adrianwisniewskiit/devops-infra-aws:latest
@@ -38,3 +49,19 @@
         restart_policy: always
         ports:
           - "80:5000"
+        env:
+          DB_HOST: "{{ db_host }}"
+          DB_USER: "{{ db_secret.username }}"
+          DB_PASS: "{{ db_secret.password }}"
+          DB_NAME: "{{ db_secret.db_name }}"
+
+    - name: Copy init.sql to EC2
+      copy:
+        src: ../app/init.sql
+        dest: /home/ubuntu/init.sql
+
+    - name: Initialize RDS database schema using database credentials
+      shell: |
+        PGPASSWORD="{{ db_secret.password }}" \
+        psql -h {{ db_host }} -U {{ db_secret.username }} -d {{ db_secret.db_name }} -f /home/ubuntu/init.sql
+      when: db_host is defined
