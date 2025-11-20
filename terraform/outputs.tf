@@ -1,5 +1,5 @@
 output "ec2_public_ips" {
-  value = aws_instance.devops_instance[*].public_ip
+  value = aws_instance.devops_instance[0].public_ip
 }
 
 output "alb_dns_name" {

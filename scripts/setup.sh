@@ -131,7 +131,7 @@ echo "--------------------------------------"
 echo "Validating and applying Terraform configuration..."
 terraform validate
 terraform apply
-EC2_IP=$(terraform output -raw ec2_public_ips | tr -d '[]," ')
+EC2_IP=$(terraform output -raw ec2_public_ip)
 DB_HOST=$(terraform output -raw db_host)
 DB_NAME=$(terraform output -raw db_name)
 ALB_DNS=$(terraform output -raw alb_dns_name)
