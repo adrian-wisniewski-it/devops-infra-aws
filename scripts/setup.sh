@@ -59,7 +59,7 @@ echo "Ansible AWS collection installed successfully."
 echo "--------------------------------------"
 
 # Configure AWS credentials if not already configured
-if [ ! -f "$HOME/.aws/credentials" ]; then
+if [ ! -f "/root/.aws/credentials" ]; then
     echo "AWS credentials not found. Please enter your AWS credentials."
     aws configure
     echo "AWS credentials configured successfully."
@@ -103,8 +103,12 @@ echo "--------------------------------------"
 cd terraform
 if [ -f "backend.tf" ] && ! grep -q "PLACEHOLDER" backend.tf; then
     echo "S3 bucket backend for Terraform state is already configured. Skipping setup."
+    terraform init
 else
-    echo "Initializing Terraform..."
+    echo "Setting up S3 backend for Terraform state..."
+    # Temporarily rename backend.tf to avoid errors during initial init
+    mv backend.tf backend.tf.tmp
+    echo "Initializing Terraform without backend..."
     terraform init
     echo "Creating S3 bucket backend for Terraform state..."
     terraform apply \
@@ -114,7 +118,8 @@ else
     BUCKET_NAME=$(terraform output -raw tf_state_bucket_name)
     echo "S3 bucket created: $BUCKET_NAME"
     # Update backend.tf with the actual bucket name
-    sed -i "s/PLACEHOLDER/$BUCKET_NAME/" backend.tf
+    sed -i "s/PLACEHOLDER/$BUCKET_NAME/" backend.tf.tmp
+    mv backend.tf.tmp backend.tf
     echo "Migrating Terraform state to the new S3 backend..."
     terraform init -migrate-state -force-copy
     echo "Terraform S3 backend setup complete."  
