@@ -12,7 +12,7 @@ resource "aws_db_subnet_group" "devops_rds_subnet_group" {
 resource "random_password" "db_password" {
   length           = 20
   special          = true
-  override_special = "_%@"
+  override_special = "!#$%&*()-_=+[]{}:?"
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
