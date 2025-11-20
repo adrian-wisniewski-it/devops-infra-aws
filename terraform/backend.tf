@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket       = "devops-aws-infra-tfstate-PLACEHOLDER"
+    bucket       = "PLACEHOLDER"
     key          = "terraform.tfstate"
     region       = "eu-central-1"
     encrypt      = true
