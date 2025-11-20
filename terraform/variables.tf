@@ -83,7 +83,7 @@ variable "db_name" {
 
 variable "db_username" {
   type    = string
-  default = "admin"
+  default = "devopsadmin"
 }
 
 variable "db_allocated_storage" {
