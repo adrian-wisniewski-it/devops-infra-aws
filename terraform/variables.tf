@@ -78,7 +78,7 @@ variable "db_instance_class" {
 
 variable "db_name" {
   type    = string
-  default = "database"
+  default = "devopsdb"
 }
 
 variable "db_username" {
