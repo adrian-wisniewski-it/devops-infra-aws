@@ -4,7 +4,6 @@ resource "random_id" "suffix" {
 
 resource "aws_s3_bucket" "tf_state_bucket" {
   bucket = "devops-aws-infra-tfstate-${random_id.suffix.hex}"
-  force_destroy = true
 
   tags = {
     Name = "devops-aws-infra-tfstate-bucket"
